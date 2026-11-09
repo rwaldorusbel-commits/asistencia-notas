@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\User; // @phpstan-ignore-line
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Support\Facades\Mail; // <-- Agregado para enviar correos
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Password;
 class UsuarioController extends Controller
 {
     private const ROLES = ['admin', 'docente', 'estudiante', 'apoderado'];
@@ -45,7 +47,9 @@ class UsuarioController extends Controller
         $datos['password'] = Hash::make($datos['password']);
         $datos['activo'] = true;
 
-        User::create($datos);
+        $usuario = User::create($datos);          // <-- CAMBIO 1: guardamos en $usuario
+
+        event(new Registered($usuario));          // <-- CAMBIO 2: envía el correo de verificación
 
         return redirect()->route('usuarios.index')->with('ok', 'Usuario creado correctamente.');
     }
@@ -97,5 +101,29 @@ class UsuarioController extends Controller
         $usuario->update(['activo' => true]);
 
         return redirect()->route('usuarios.index')->with('ok', 'Usuario activado.');
+    }
+
+    // ==========================================================
+    // NUEVA FUNCIÓN PARA ENVIAR EL CORREO DE RECUPERACIÓN
+    // ==========================================================
+    public function recuperarPassword(Request $request)
+    {
+        // 1. Validamos que el correo venga en el formulario
+        $request->validate(['email' => 'required|email']);
+
+        // 2. Buscamos al usuario (sea alumno, profe o admin) por el correo
+        $usuario = User::where('email', $request->email)->first();
+
+        if ($usuario) {
+            // 3. Le enviamos el correo A ÉL, usando tu cuenta del .env como remitente
+            Mail::raw('Haz clic aquí para recuperar tu contraseña...', function ($message) use ($usuario) {
+                $message->to($usuario->email) // <--- Se envía al correo del usuario
+                        ->subject('Recuperación de contraseña');
+            });
+
+            return back()->with('success', 'Correo enviado a ' . $usuario->email);
+        }
+
+        return back()->with('error', 'Este correo no está registrado en el sistema.');
     }
 }

@@ -6,7 +6,7 @@
     @foreach ($secciones as $s)
         <option value="{{ $s->id }}"
             {{ old('seccion_id', $asignacion->seccion_id ?? '') == $s->id ? 'selected' : '' }}>
-            {{ $s->periodo->nombre }} - {{ $s->grado->nombre ?? '' }} {{ $s->nombre }}
+            {{ $s->periodo?->nombre }} - {{ $s->grado?->nombre }} {{ $s->nombre }}
         </option>
     @endforeach
 </select>

@@ -48,8 +48,20 @@
         Activo
     </label>
 </div>
+<h3>Acceso del estudiante</h3>
 
-<h3>Apoderado (opcional)</h3>
+<label for="email">Correo del estudiante (con este inicia sesión)</label>
+<input type="email" id="email" name="email"
+       value="{{ old('email', $estudiante->user->email ?? '') }}" required>
+@error('email') <small style="color:red">{{ $message }}</small> @enderror
+
+<label for="password">
+    Contraseña {{ isset($estudiante) ? '(vacío = no cambiarla)' : '(vacío = se usa el DNI)' }}
+</label>
+<input type="password" id="password" name="password"
+       minlength="8" autocomplete="new-password">
+@error('password') <small style="color:red">{{ $message }}</small> @enderror
+<h4>Apoderado (opcional)</h4>
 
 <div class="campo">
     <label for="ap_nombres">Nombres</label>

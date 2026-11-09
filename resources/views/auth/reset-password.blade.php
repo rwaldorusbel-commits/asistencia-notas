@@ -35,5 +35,18 @@
                 {{ __('Reset Password') }}
             </x-primary-button>
         </div>
+
     </form>
+    <form method="POST" action="{{ route('password.update') }}">
+    @csrf
+    <input type="hidden" name="token" value="{{ $token }}">
+    <input type="email" name="email" value="{{ old('email', $email) }}" required>
+    <input type="password" name="password" placeholder="Nueva contraseña" required>
+    <input type="password" name="password_confirmation" placeholder="Repite la contraseña" required>
+    @error('email') <p>{{ $message }}</p> @enderror
+    @error('password') <p>{{ $message }}</p> @enderror
+    <button type="submit">Cambiar contraseña</button>
+</form>
+
+
 </x-guest-layout>
