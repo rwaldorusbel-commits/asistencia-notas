@@ -1,3 +1,5 @@
+
+
 <div x-data="{ cargando: true }"
      x-init="window.addEventListener('load', () => setTimeout(() => cargando = false, 600))"
      @mostrar-carga.window="cargando = true"

@@ -1,7 +1,9 @@
-@extends('layouts.panel')
-@section('titulo', 'Nueva matrícula')
+<!-- resources/views/matriculas/create.blade.php -->
+<x-layout>
+    <x-slot:titulo>
+        Nueva matrícula
+    </x-slot>
 
-@section('contenido')
     <div class="encabezado"><h1>📝 Nueva matrícula</h1></div>
     <div class="tarjeta">
         <form method="POST" action="{{ route('matriculas.store') }}">
@@ -44,4 +46,4 @@
             <a href="{{ route('matriculas.index') }}">Cancelar</a>
         </form>
     </div>
-@endsection
+</x-layout>

@@ -22,4 +22,12 @@
             </x-primary-button>
         </div>
     </form>
+    @if (session('status')) <p>{{ session('status') }}</p> @endif
+
+<form method="POST" action="{{ route('password.email') }}">
+    @csrf
+    <input type="email" name="email" placeholder="Tu correo" value="{{ old('email') }}" required>
+    @error('email') <p>{{ $message }}</p> @enderror
+    <button type="submit">Enviar enlace</button>
+</form>
 </x-guest-layout>

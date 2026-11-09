@@ -28,4 +28,13 @@ class Matricula extends Model
     {
         return $this->belongsTo(Periodo::class, 'periodo_id');
     }
+    public function asistencias()
+{
+    return $this->hasMany(Asistencia::class, 'matricula_id');
+}
+
+public function notas()
+{
+    return $this->hasMany(Nota::class, 'matricula_id');
+}
 }

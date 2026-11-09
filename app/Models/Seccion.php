@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Models;
-use App\Models\Grado;
-
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,9 +16,9 @@ class Seccion extends Model
     {
         return $this->belongsTo(Periodo::class, 'periodo_id');
     }
-public function grado()
-{
-    return $this->belongsTo(Grado::class, 'grado_id');
-}
 
+    public function grado()
+    {
+        return $this->belongsTo(Grado::class, 'grado_id');
+    }
 }

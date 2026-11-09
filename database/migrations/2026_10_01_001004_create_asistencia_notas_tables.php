@@ -6,22 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('asistencia_notas_tables', function (Blueprint $table) {
+        Schema::create('asis_notas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('matricula_id')->constrained('asis_matriculas')->cascadeOnDelete();
+            $table->foreignId('asignacion_id')->constrained('asis_asignaciones')->cascadeOnDelete();
+            $table->string('descripcion', 100);          // Ej: Examen parcial, Tarea 1
+            $table->decimal('valor', 4, 2);              // Ej: 15.50 (escala 0 a 20)
+            $table->decimal('peso', 5, 2)->default(100); // Porcentaje para el promedio ponderado
+            $table->date('fecha')->nullable();
+            $table->text('observacion')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('asistencia_notas_tables');
+        Schema::dropIfExists('asis_notas');
     }
 };

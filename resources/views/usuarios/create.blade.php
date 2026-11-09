@@ -26,6 +26,7 @@
                         <option value="{{ $rol }}" @selected(old('rol') === $rol)>{{ ucfirst($rol) }}</option>
                     @endforeach
                 </select>
+
                 @error('rol') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
             </div>
 

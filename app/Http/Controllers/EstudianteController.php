@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Apoderado;
 use App\Models\Estudiante;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 
@@ -16,20 +18,28 @@ class EstudianteController extends Controller
         $apId = $e?->apoderado_id;
 
         return [
-         'codigo' => ['nullable', 'string', 'max:20',
-         Rule::unique('asis_estudiantes', 'codigo')->ignore($e?->id)],
-            'dni'              => ['nullable', 'string', 'max:15',
+            'codigo' => ['nullable', 'string', 'max:20',
+                Rule::unique('asis_estudiantes', 'codigo')->ignore($e?->id)],
+            'dni' => ['nullable', 'string', 'max:15',
                 Rule::unique('asis_estudiantes', 'dni')->ignore($e?->id)],
             'nombres'          => ['required', 'string', 'max:255'],
             'apellidos'        => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['nullable', 'date', 'before:today'],
 
-            'ap_nombres'       => ['nullable', 'required_with:ap_apellidos,ap_dni', 'string', 'max:255'],
-            'ap_apellidos'     => ['nullable', 'required_with:ap_nombres', 'string', 'max:255'],
-            'ap_dni'           => ['nullable', 'string', 'max:15',
+            // Acceso del estudiante (login)
+            'email' => ['required', 'email', 'max:255',
+                Rule::unique('users', 'email')->ignore($e?->user_id)],
+            'password' => $e
+                ? ['nullable', 'string', 'min:8']                          // editar: opcional
+                : ['nullable', 'required_without:dni', 'string', 'min:8'], // crear: contraseña o DNI
+
+            // Apoderado (opcional)
+            'ap_nombres'   => ['nullable', 'required_with:ap_apellidos,ap_dni', 'string', 'max:255'],
+            'ap_apellidos' => ['nullable', 'required_with:ap_nombres', 'string', 'max:255'],
+            'ap_dni'       => ['nullable', 'string', 'max:15',
                 Rule::unique('asis_apoderados', 'dni')->ignore($apId)],
-            'ap_telefono'      => ['nullable', 'string', 'max:20'],
-            'ap_email'         => ['nullable', 'email', 'max:255'],
+            'ap_telefono'  => ['nullable', 'string', 'max:20'],
+            'ap_email'     => ['nullable', 'email', 'max:255'],
         ];
     }
 
@@ -58,7 +68,7 @@ class EstudianteController extends Controller
     private function datosEstudiante(array $d, Request $request, ?int $apoderadoId): array
     {
         return [
-            'codigo'           => $d['codigo'],
+            'codigo'           => $d['codigo'] ?? null,
             'dni'              => $d['dni'] ?? null,
             'nombres'          => $d['nombres'],
             'apellidos'        => $d['apellidos'],
@@ -92,16 +102,34 @@ class EstudianteController extends Controller
         $d = $request->validate($this->reglas());
 
         DB::transaction(function () use ($d, $request) {
+            // 1. Usuario con el correo y contraseña del formulario
+            $user = new User();
+            $user->name              = $d['nombres'] . ' ' . $d['apellidos'];
+            $user->email             = $d['email'];
+            $user->password          = Hash::make($d['password'] ?? $d['dni']);
+            $user->rol               = 'estudiante';
+            $user->activo            = $request->boolean('activo');
+            $user->email_verified_at = now();
+            $user->save();
+
+            // 2. Apoderado (si lo llenaron)
             $apId = $this->guardarApoderado($d);
-            Estudiante::create($this->datosEstudiante($d, $request, $apId));
+
+            // 3. Estudiante vinculado al usuario
+            //    Al llevar user_id, el evento "created" del modelo NO crea el correo falso.
+            $datos = $this->datosEstudiante($d, $request, $apId);
+            $datos['user_id'] = $user->id;
+
+            Estudiante::create($datos);
         });
 
-        return redirect()->route('estudiantes.index')->with('ok', 'Estudiante registrado correctamente.');
+        return redirect()->route('estudiantes.index')
+            ->with('ok', 'Estudiante registrado correctamente.');
     }
 
     public function edit(Estudiante $estudiante)
     {
-        $estudiante->load('apoderado');
+        $estudiante->load(['apoderado', 'user']);
 
         return view('estudiantes.edit', compact('estudiante'));
     }
@@ -111,8 +139,37 @@ class EstudianteController extends Controller
         $d = $request->validate($this->reglas($estudiante));
 
         DB::transaction(function () use ($d, $request, $estudiante) {
-            $apId = $this->guardarApoderado($d, $estudiante);
-            $estudiante->update($this->datosEstudiante($d, $request, $apId));
+            $apId  = $this->guardarApoderado($d, $estudiante);
+            $datos = $this->datosEstudiante($d, $request, $apId);
+
+            // Si dejan el código vacío, se conserva el actual
+            if (empty($datos['codigo'])) {
+                unset($datos['codigo']);
+            }
+
+            $estudiante->update($datos);
+
+            // Actualizar (o crear si faltaba) el usuario de acceso
+            $user = $estudiante->user ?? new User();
+            $user->name   = $d['nombres'] . ' ' . $d['apellidos'];
+            $user->email  = $d['email'];
+            $user->rol    = 'estudiante';
+            $user->activo = $request->boolean('activo');
+
+            if (!empty($d['password'])) {
+                $user->password = Hash::make($d['password']);
+            }
+
+            if (!$user->exists) {
+                $user->password ??= Hash::make($d['dni'] ?? $estudiante->codigo);
+                $user->email_verified_at = now();
+            }
+
+            $user->save();
+
+            if (!$estudiante->user_id) {
+                $estudiante->update(['user_id' => $user->id]);
+            }
         });
 
         return redirect()->route('estudiantes.index')->with('ok', 'Estudiante actualizado.');
@@ -127,7 +184,11 @@ class EstudianteController extends Controller
             return back()->withErrors(['general' => 'No se puede eliminar: el estudiante tiene matrículas. Desactívalo en su lugar.']);
         }
 
-        $estudiante->delete();
+        DB::transaction(function () use ($estudiante) {
+            $user = $estudiante->user;
+            $estudiante->delete();
+            $user?->delete();
+        });
 
         return redirect()->route('estudiantes.index')->with('ok', 'Estudiante eliminado.');
     }
