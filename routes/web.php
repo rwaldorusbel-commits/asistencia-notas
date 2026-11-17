@@ -1,9 +1,11 @@
 <?php
 
+
+use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\ApoderadoPanelController;
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\AsistenciaController;
-use App\Http\Controllers\AvisoController;
+use App\Http\Controllers\Auth\AvisoController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\EstudianteController;
@@ -26,6 +28,37 @@ use Illuminate\Support\Facades\Route;
 // });
 
 use App\Http\Controllers\NotaController;
+use Illuminate\Support\Facades\Session;
+
+
+
+
+Route::get('/tv', function () {
+    return view('asistencia.tv');
+})->name('asistencia.tv');
+
+
+Route::get('/lang/{locale}', function (string $locale) {
+    abort_unless(array_key_exists($locale, config('app.available_locales')), 404);
+
+    session(['locale' => $locale]);
+    Cookie::queue('locale', $locale, 525600); // Guarda la cookie por 1 año
+
+    return redirect()->back();
+})->name('lang.switch');
+Route::get('/lang/{locale}', function (string $locale) {
+    if (array_key_exists($locale, config('app.available_locales'))) {
+        Session::put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
+Route::get('/lang/{locale}', function (string $locale) {
+    if (in_array($locale, ['es', 'en','fr'])) {
+        Session::put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('lang.switch');
 
 Route::get('notas', [NotaController::class, 'index'])->name('notas.index');
 Route::get('notas/{asignacion}', [NotaController::class, 'show'])->name('notas.show');

@@ -1,36 +1,36 @@
 @php
-    // Enlaces por rol: [texto, nombre de ruta, patrón para marcar como activo]
+    // Enlaces por rol: [clave de traducción, nombre de ruta, patrón para marcar como activo]
     $menus = [
         'estudiante' => [
-            ['Mis cursos',   'estudiante.cursos',     'estudiante.cursos'],
-            ['Mi asistencia','estudiante.asistencia', 'estudiante.asistencia'],
-            ['Mis notas',    'estudiante.notas',      'estudiante.notas'],
+            ['nav_my_courses', 'estudiante.cursos',     'estudiante.cursos'],
+            ['nav_attendance', 'estudiante.asistencia', 'estudiante.asistencia'],
+            ['nav_grades',     'estudiante.notas',      'estudiante.notas'],
         ],
         'apoderado' => [
-            ['Mis hijos',    'apoderado.hijos',       'apoderado.hijos'],
-            ['Asistencia',   'apoderado.asistencia',  'apoderado.asistencia'],
-            ['Notas',        'apoderado.notas',       'apoderado.notas'],
+            ['nav_students',   'apoderado.hijos',       'apoderado.hijos'],
+            ['nav_attendance', 'apoderado.asistencia',  'apoderado.asistencia'],
+            ['nav_grades',     'apoderado.notas',       'apoderado.notas'],
         ],
         'docente' => [
-            ['Tomar asistencia', 'asistencia.create', 'asistencia.*'],
-            ['Historial',        'historial.index',   'historial.*'],
-            ['Cursos',           'cursos.index',      'cursos.*'],
-            ['Estudiantes',      'estudiantes.index', 'estudiantes.*'],
-            ['Matrículas',       'matriculas.index',  'matriculas.*'],
-            ['Notas', 'notas.index', 'notas.*'],
+            ['nav_take_attendance', 'asistencia.create', 'asistencia.*'],
+            ['nav_history',         'historial.index',   'historial.*'],
+            ['nav_courses',         'cursos.index',      'cursos.*'],
+            ['nav_students',        'estudiantes.index', 'estudiantes.*'],
+            ['nav_enrollments',     'matriculas.index',  'matriculas.*'],
+            ['nav_grades',          'notas.index',       'notas.*'],
         ],
         'admin' => [
-            ['Tomar asistencia', 'asistencia.create',  'asistencia.*'],
-            ['Historial',        'historial.index',    'historial.*'],
-            ['Cursos',           'cursos.index',       'cursos.*'],
-            ['Estudiantes',      'estudiantes.index',  'estudiantes.*'],
-            ['Matrículas',       'matriculas.index',   'matriculas.*'],
-            ['Usuarios',         'usuarios.index',     'usuarios.*'],
-            ['Docentes',         'docentes.index',     'docentes.*'],
-            ['Periodos',         'periodos.index',     'periodos.*'],
-            ['Secciones',        'secciones.index',    'secciones.*'],
-            ['Asignaciones',     'asignaciones.index', 'asignaciones.*'],
-            ['Notas', 'notas.index', 'notas.*'],
+            ['nav_take_attendance', 'asistencia.create',  'asistencia.*'],
+            ['nav_history',         'historial.index',    'historial.*'],
+            ['nav_courses',         'cursos.index',       'cursos.*'],
+            ['nav_students',        'estudiantes.index',  'estudiantes.*'],
+            ['nav_enrollments',     'matriculas.index',   'matriculas.*'],
+            ['nav_users',           'usuarios.index',     'usuarios.*'],
+            ['nav_teachers',        'docentes.index',     'docentes.*'],
+            ['nav_periods',         'periodos.index',     'periodos.*'],
+            ['nav_sections',        'secciones.index',    'secciones.*'],
+            ['nav_assignments',     'asignaciones.index', 'asignaciones.*'],
+            ['nav_grades',          'notas.index',        'notas.*'],
         ],
     ];
 
@@ -52,15 +52,20 @@
                 <!-- Enlaces (escritorio) -->
                 <div class="hidden space-x-4 lg:-my-px lg:ms-6 lg:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        Inicio
+                        {{ __('ui.nav_home') }}
                     </x-nav-link>
 
                     @foreach ($enlaces as [$texto, $ruta, $patron])
                         <x-nav-link :href="route($ruta)" :active="request()->routeIs($patron)">
-                            {{ $texto }}
+                            {{ __('ui.' . $texto) }}
                         </x-nav-link>
                     @endforeach
                 </div>
+            </div>
+
+            <!-- Selector de idioma (escritorio) -->
+            <div class="hidden lg:flex lg:items-center lg:ms-6 space-x-2 text-sm">
+                <x-language-switcher />
             </div>
 
             <!-- Usuario (escritorio) -->
@@ -80,14 +85,14 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            Mi perfil
+                            {{ __('ui.my_profile') }}
                         </x-dropdown-link>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();">
-                                Cerrar sesión
+                                {{ __('ui.logout') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -109,13 +114,18 @@
     <!-- Menú móvil -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden lg:hidden">
         <div class="pt-2 pb-3 space-y-1">
+
+            <div class="px-4 pb-3">
+                <x-language-switcher />
+            </div>
+
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                Inicio
+                {{ __('ui.nav_home') }}
             </x-responsive-nav-link>
 
             @foreach ($enlaces as [$texto, $ruta, $patron])
                 <x-responsive-nav-link :href="route($ruta)" :active="request()->routeIs($patron)">
-                    {{ $texto }}
+                    {{ __('ui.' . $texto) }}
                 </x-responsive-nav-link>
             @endforeach
         </div>
@@ -128,14 +138,14 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    Mi perfil
+                    {{ __('ui.my_profile') }}
                 </x-responsive-nav-link>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault(); this.closest('form').submit();">
-                        Cerrar sesión
+                        {{ __('ui.logout') }}
                     </x-responsive-nav-link>
                 </form>
             </div>

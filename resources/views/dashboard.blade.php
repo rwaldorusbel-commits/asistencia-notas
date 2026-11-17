@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Inicio
+            {{ __('ui.nav_home') }}
         </h2>
     </x-slot>
 
@@ -10,34 +10,35 @@
 
             {{-- Bienvenida --}}
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <p>Bienvenido, <strong>{{ auth()->user()->name }}</strong>.</p>
+                <p>{!! __('ui.welcome_user', ['name' => '<strong>' . e(auth()->user()->name) . '</strong>']) !!}</p>
             </div>
 
             {{-- Tarjeta de Mi perfil --}}
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <h2 class="text-lg font-bold">👤 Mi perfil</h2>
-                <p class="text-gray-600">Consulta y actualiza la información de tu cuenta.</p>
+                <h2 class="text-lg font-bold">👤 {{ __('ui.my_profile') }}</h2>
+                <p class="text-gray-600">{{ __('ui.profile_desc') }}</p>
 
                 <ul class="mt-3 text-gray-700">
-                    <li><strong>Nombre:</strong> {{ auth()->user()->name }}</li>
-                    <li><strong>Correo:</strong> {{ auth()->user()->email }}</li>
-                    <li><strong>Rol:</strong> {{ auth()->user()->rol }}</li>
+                    <li><strong>{{ __('ui.name') }}:</strong> {{ auth()->user()->name }}</li>
+                    <li><strong>{{ __('ui.email') }}:</strong> {{ auth()->user()->email }}</li>
+                    <li><strong>{{ __('ui.role') }}:</strong> {{ __('ui.role_' . strtolower(auth()->user()->rol)) }}</li>
                 </ul>
 
                 {{-- Botones que despliegan los formularios --}}
                 <div class="mt-4 flex flex-wrap gap-4">
                     <button type="button" id="btnPerfil" onclick="toggleForm('formPerfil')"
                             class="text-blue-600 underline font-medium">
-                        ✏️ Editar mi perfil
+                        ✏️ {{ __('ui.edit_profile') }}
                     </button>
                     <button type="button" id="btnPassword" onclick="toggleForm('formPassword')"
                             class="text-blue-600 underline font-medium">
-                        🔑 Cambiar contraseña
+                        🔑 {{ __('ui.change_password') }}
                     </button>
                     <button type="button" id="btnEliminar" onclick="toggleForm('formEliminar')"
                             class="text-red-600 underline font-medium">
-                        🗑️ Eliminar cuenta
+                        🗑️ {{ __('ui.delete_acc') }}
                     </button>
+
                 </div>
 
                 {{-- FORMULARIO 1: Datos personales --}}
@@ -70,16 +71,13 @@
                 const el = document.getElementById(formId);
 
                 if (formId === id) {
-                    // Si ya está abierto, lo cierra; si está cerrado, lo abre
                     el.classList.toggle('hidden');
                 } else {
-                    // Los demás siempre se ocultan
                     el.classList.add('hidden');
                 }
             });
         }
 
-        // Si llegas desde el menú del icono de perfil con #eliminar-cuenta
         if (window.location.hash === '#eliminar-cuenta') {
             toggleForm('formEliminar');
             document.getElementById('formEliminar').scrollIntoView({ behavior: 'smooth' });

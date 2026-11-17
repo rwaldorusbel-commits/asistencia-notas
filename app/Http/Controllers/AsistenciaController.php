@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Asignacion;
 use App\Models\Asistencia;
 use App\Models\Matricula;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\AsistenciaTomada;
+
 
 class AsistenciaController extends Controller
 {
+
+
     private function asignacionesDelUsuario()
     {
         $usuario = Auth::user();
@@ -42,38 +47,53 @@ class AsistenciaController extends Controller
 
         return view('asistencia.create', compact(
             'asignaciones', 'asignacion', 'fecha', 'matriculas', 'existentes'
+
         ));
+
+
     }
 
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'asignacion_id' => ['required', 'integer'],
-            'fecha'         => ['required', 'date'],
-            'estados'       => ['required', 'array'],
-            'estados.*'     => ['in:presente,tarde,falta'],
-        ]);
+   public function store(Request $request)
+{
+    $data = $request->validate([
+        'asignacion_id' => ['required', 'integer'],
+        'fecha'         => ['required', 'date', 'before_or_equal:today'],
+        'estados'       => ['required', 'array'],
+        'estados.*'     => ['in:presente,tarde,falta'],
+    ]);
 
-        $asignacion = $this->asignacionesDelUsuario()->firstWhere('id', $data['asignacion_id']);
-        abort_unless($asignacion, 403);
+    $asignacion = $this->asignacionesDelUsuario()->firstWhere('id', $data['asignacion_id']);
+    abort_unless($asignacion, 403);
 
-        $validas = Matricula::where('seccion_id', $asignacion->seccion_id)->pluck('id')->all();
+    $validas = Matricula::where('seccion_id', $asignacion->seccion_id)->pluck('id')->all();
 
-        foreach ($data['estados'] as $matriculaId => $estado) {
-            if (! in_array((int) $matriculaId, $validas)) {
-                continue;
-            }
-
-            Asistencia::updateOrCreate(
-                [
-                    'asignacion_id' => $asignacion->id,
-                    'matricula_id'  => $matriculaId,
-                    'fecha'         => $data['fecha'],
-                ],
-                ['estado' => $estado]
-            );
+    foreach ($data['estados'] as $matriculaId => $estado) {
+        if (! in_array((int) $matriculaId, $validas)) {
+            continue;
         }
 
-        return back()->with('status', 'Asistencia guardada.');
+        Asistencia::updateOrCreate(
+            [
+                'asignacion_id' => $asignacion->id,
+                'matricula_id'  => $matriculaId,
+                'fecha'         => $data['fecha'],
+            ],
+            ['estado' => $estado]
+        );
     }
+
+    // 1. Primero creamos la variable con el texto completo
+    $nombreCurso = ($asignacion->seccion->periodo->nombre ?? '') . ' - ' .
+                   ($asignacion->seccion->grado->nombre ?? '') . ' ' .
+                   $asignacion->seccion->nombre . ' - ' .
+                   $asignacion->curso->nombre;
+
+    // 2. Luego disparamos el evento usando esa variable
+    event(new AsistenciaTomada(
+        $asignacion->curso_id,
+        'El profesor ha guardado la asistencia del curso: ' . $nombreCurso
+    ));
+
+    return back()->with('status', 'Asistencia guardada.');
+}
 }

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Iniciar sesión - Asistencia & Notas</title>
+    <title>{{ __('ui.login') }} - {{ __('ui.app_name') }}</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -83,21 +83,26 @@
     </style>
 </head>
 <body>
+    {{-- Selector de idioma: justo después de abrir <body> --}}
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 50; background: rgba(255,255,255,.9); border-radius: 12px;">
+        <x-language-switcher />
+    </div>
+
     <div class="card">
 
         <div class="lado">
             <div class="logo">🎓</div>
-            <h1>Asistencia & Notas</h1>
+            <h1>{{ __('ui.app_name') }}</h1>
             <ul>
-                <li>✅ Asistencia diaria por curso</li>
-                <li>📝 Notas y promedios automáticos</li>
-                <li>📊 Reportes en PDF y Excel</li>
+                <li>✅ {{ __('ui.feat_attendance') }}</li>
+                <li>📝 {{ __('ui.feat_grades') }}</li>
+                <li>📊 {{ __('ui.feat_reports') }}</li>
             </ul>
         </div>
 
         <div class="form">
-            <h2>Bienvenido 👋</h2>
-            <p class="sub">Ingresa tus datos para acceder al sistema.</p>
+            <h2>{{ __('ui.welcome') }} 👋</h2>
+            <p class="sub">{{ __('ui.subtitle') }}</p>
 
             @if (session('status'))
                 <div class="estado">{{ session('status') }}</div>
@@ -107,33 +112,33 @@
                 @csrf
 
                 <div class="campo">
-                    <label for="email">Correo electrónico</label>
+                    <label for="email">{{ __('ui.email') }}</label>
                     <input id="email" type="email" name="email" value="{{ old('email') }}"
-                           placeholder="tu@correo.com" required autofocus autocomplete="username">
+                           placeholder="{{ __('ui.email_placeholder') }}" required autofocus autocomplete="username">
                     @error('email') <p class="error">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="campo">
-                    <label for="password">Contraseña</label>
+                    <label for="password">{{ __('ui.password') }}</label>
                     <div class="pass">
                         <input id="password" type="password" name="password"
                                placeholder="••••••••" required autocomplete="current-password">
-                        <button type="button" class="ojo" id="verPass" aria-label="Mostrar contraseña">👁️</button>
+                        <button type="button" class="ojo" id="verPass" aria-label="{{ __('ui.show_password') }}">👁️</button>
                     </div>
                     @error('password') <p class="error">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="fila">
-                    <label><input type="checkbox" name="remember"> Recordarme</label>
+                    <label><input type="checkbox" name="remember"> {{ __('ui.remember') }}</label>
                     @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                        <a href="{{ route('password.request') }}">{{ __('ui.forgot') }}</a>
                     @endif
                 </div>
 
-                <button type="submit" class="btn">Iniciar sesión</button>
+                <button type="submit" class="btn">{{ __('ui.login') }}</button>
             </form>
 
-            <p class="pie">¿No tienes cuenta? Solicítala al administrador.</p>
+            <p class="pie">{{ __('ui.no_account') }}</p>
         </div>
     </div>
 

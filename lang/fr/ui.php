@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'app_name'          => 'Présence & Notes',
+    'feat_attendance'   => 'Présence quotidienne par cours',
+    'feat_grades'       => 'Notes et moyennes automatiques',
+    'feat_reports'      => 'Rapports PDF et Excel',
+    'welcome'           => 'Bienvenue',
+    'subtitle'          => 'Entrez vos informations pour accéder au système.',
+    'email'             => 'Adresse e-mail',
+    'email_placeholder' => 'vous@email.com',
+    'password'          => 'Mot de passe',
+    'show_password'     => 'Afficher le mot de passe',
+    'remember'          => 'Se souvenir de moi',
+    'forgot'            => 'Mot de passe oublié ?',
+    'login'             => 'Se connecter',
+    'no_account'        => "Vous n'avez pas de compte ? Demandez-le à l'administrateur.",
+    'my_profile'        => 'Mon profil',
+    'delete_acc'        => 'Supprimer le compte',
+    'logout'            => 'Se déconnecter',
+
+    // Panel / menú
+    'panel'               => 'Tableau de bord',
+    'nav_home'            => 'Accueil',
+    'nav_administration'  => 'Administration',
+    'nav_users'           => 'Utilisateurs',
+    'nav_teachers'        => 'Enseignants',
+    'nav_academic'        => 'Gestion académique',
+    'nav_periods'         => 'Périodes',
+    'nav_courses'         => 'Cours',
+    'nav_grades'          => 'Notes',
+    'nav_sections'        => 'Sections',
+    'nav_students'        => 'Étudiants',
+    'nav_enrollments'     => 'Inscriptions',
+    'nav_assignments'     => 'Affectations',
+    'nav_attendance'      => 'Présences',
+    'nav_take_attendance' => 'Faire l\'appel',
+    'nav_history'         => 'Historique',
+    'nav_my_work'         => 'Mon travail',
+    'nav_my_info'         => 'Mes informations',
+    'nav_my_courses'      => 'Mes cours',
+
+    // Roles
+    'role_admin'          => 'Administrateur',
+    'role_administrador'  => 'Administrateur',
+    'role_docente'        => 'Enseignant',
+    'role_estudiante'     => 'Étudiant',
+];

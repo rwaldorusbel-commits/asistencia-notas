@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'app_name'          => 'Asistencia & Notas',
+    'feat_attendance'   => 'Asistencia diaria por curso',
+    'feat_grades'       => 'Notas y promedios automáticos',
+    'feat_reports'      => 'Reportes en PDF y Excel',
+    'welcome'           => 'Bienvenido',
+    'subtitle'          => 'Ingresa tus datos para acceder al sistema.',
+    'email'             => 'Correo electrónico',
+    'email_placeholder' => 'tu@correo.com',
+    'password'          => 'Contraseña',
+    'show_password'     => 'Mostrar contraseña',
+    'remember'          => 'Recordarme',
+    'forgot'            => '¿Olvidaste tu contraseña?',
+    'login'             => 'Iniciar sesión',
+    'no_account'        => '¿No tienes cuenta? Solicítala al administrador.',
+    'my_profile'        => 'Mi perfil',
+    'delete_acc'        => 'Eliminar cuenta',
+    'logout'            => 'Cerrar sesión',
+
+    // Panel / menú
+    'panel'               => 'Panel',
+    'nav_home'            => 'Inicio',
+    'nav_administration'  => 'Administración',
+    'nav_users'           => 'Usuarios',
+    'nav_teachers'        => 'Docentes',
+    'nav_academic'        => 'Gestión académica',
+    'nav_periods'         => 'Periodos',
+    'nav_courses'         => 'Cursos',
+    'nav_grades'          => 'Notas',
+    'nav_sections'        => 'Secciones',
+    'nav_students'        => 'Estudiantes',
+    'nav_enrollments'     => 'Matrículas',
+    'nav_assignments'     => 'Asignaciones',
+    'nav_attendance'      => 'Asistencia',
+    'nav_take_attendance' => 'Tomar asistencia',
+    'nav_history'         => 'Historial',
+    'nav_my_work'         => 'Mi trabajo',
+    'nav_my_info'         => 'Mi información',
+    'nav_my_courses'      => 'Mis cursos',
+
+    // Roles
+    'role_admin'          => 'Administrador',
+    'role_administrador'  => 'Administrador',
+    'role_docente'        => 'Docente',
+    'role_estudiante'     => 'Estudiante',
+];

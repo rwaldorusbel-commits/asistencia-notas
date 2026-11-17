@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'app_name'          => 'Attendance & Grades',
+    'feat_attendance'   => 'Daily attendance per course',
+    'feat_grades'       => 'Automatic grades and averages',
+    'feat_reports'      => 'PDF and Excel reports',
+    'welcome'           => 'Welcome',
+    'subtitle'          => 'Enter your details to access the system.',
+    'email'             => 'Email',
+    'email_placeholder' => 'you@email.com',
+    'password'          => 'Password',
+    'show_password'     => 'Show password',
+    'remember'          => 'Remember me',
+    'forgot'            => 'Forgot your password?',
+    'login'             => 'Log in',
+    'no_account'        => "Don't have an account? Ask the administrator.",
+    'my_profile'        => 'My profile',
+    'delete_acc'        => 'Delete account',
+    'logout'            => 'Log out',
+
+    // Panel / menú
+    'panel'               => 'Dashboard',
+    'nav_home'            => 'Home',
+    'nav_administration'  => 'Administration',
+    'nav_users'           => 'Users',
+    'nav_teachers'        => 'Teachers',
+    'nav_academic'        => 'Academic management',
+    'nav_periods'         => 'Periods',
+    'nav_courses'         => 'Courses',
+    'nav_grades'          => 'Grades',
+    'nav_sections'        => 'Sections',
+    'nav_students'        => 'Students',
+    'nav_enrollments'     => 'Enrollments',
+    'nav_assignments'     => 'Assignments',
+    'nav_attendance'      => 'Attendance',
+    'nav_take_attendance' => 'Take attendance',
+    'nav_history'         => 'History',
+    'nav_my_work'         => 'My work',
+    'nav_my_info'         => 'My information',
+    'nav_my_courses'      => 'My courses',
+
+    // Roles
+    'role_admin'          => 'Administrator',
+    'role_administrador'  => 'Administrator',
+    'role_docente'        => 'Teacher',
+    'role_estudiante'     => 'Student',
+];

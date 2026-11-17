@@ -5,60 +5,62 @@
     $esEstudiante = $rol === 'estudiante';
 @endphp
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('titulo', 'Panel') - Asistencia & Notas</title>
+    <title>@yield('titulo', __('ui.panel')) - {{ __('ui.app_name') }}</title>
     <link rel="stylesheet" href="{{ asset('css/panel.css') }}">
+
+      @vite(['resources/js/app.js'])
 </head>
 <body>
     <aside class="sidebar">
 
-        <div class="marca">🎓 Asistencia & Notas</div>
+        <div class="marca">🎓 {{ __('ui.app_name') }}</div>
 
         <nav>
-            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'activo' : '' }}">🏠 Inicio</a>
+            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'activo' : '' }}">🏠 {{ __('ui.nav_home') }}</a>
 
             {{-- ADMINISTRADOR --}}
             @if ($esAdmin)
-                <div class="titulo-menu">Administración</div>
-                <a href="{{ route('usuarios.index') }}" class="{{ request()->routeIs('usuarios.*') ? 'activo' : '' }}">👥 Usuarios</a>
-                <a href="{{ route('docentes.index') }}" class="{{ request()->routeIs('docentes.*') ? 'activo' : '' }}">👨‍🏫 Docentes</a>
+                <div class="titulo-menu">{{ __('ui.nav_administration') }}</div>
+                <a href="{{ route('usuarios.index') }}" class="{{ request()->routeIs('usuarios.*') ? 'activo' : '' }}">👥 {{ __('ui.nav_users') }}</a>
+                <a href="{{ route('docentes.index') }}" class="{{ request()->routeIs('docentes.*') ? 'activo' : '' }}">👨‍🏫 {{ __('ui.nav_teachers') }}</a>
 
-                <div class="titulo-menu">Gestión académica</div>
-                <a href="{{ route('periodos.index') }}" class="{{ request()->routeIs('periodos.*') ? 'activo' : '' }}">📅 Periodos</a>
-                <a href="{{ route('cursos.index') }}" class="{{ request()->routeIs('cursos.*') ? 'activo' : '' }}">📚 Cursos</a>
-                <a href="{{ route('notas.index') }}">📒 Notas</a>
-                <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">🏫 Secciones</a>
-                <a href="{{ route('estudiantes.index') }}" class="{{ request()->routeIs('estudiantes.*') ? 'activo' : '' }}">🧑‍🎓 Estudiantes</a>
-                <a href="{{ route('matriculas.index') }}" class="{{ request()->routeIs('matriculas.*') ? 'activo' : '' }}">📝 Matrículas</a>
-                <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">👩‍🏫 Asignaciones</a>
+                <div class="titulo-menu">{{ __('ui.nav_academic') }}</div>
+                <a href="{{ route('periodos.index') }}" class="{{ request()->routeIs('periodos.*') ? 'activo' : '' }}">📅 {{ __('ui.nav_periods') }}</a>
+                <a href="{{ route('cursos.index') }}" class="{{ request()->routeIs('cursos.*') ? 'activo' : '' }}">📚 {{ __('ui.nav_courses') }}</a>
+                <a href="{{ route('notas.index') }}">📒 {{ __('ui.nav_grades') }}</a>
+                <a href="{{ route('secciones.index') }}" class="{{ request()->routeIs('secciones.*') ? 'activo' : '' }}">🏫 {{ __('ui.nav_sections') }}</a>
+                <a href="{{ route('estudiantes.index') }}" class="{{ request()->routeIs('estudiantes.*') ? 'activo' : '' }}">🧑‍🎓 {{ __('ui.nav_students') }}</a>
+                <a href="{{ route('matriculas.index') }}" class="{{ request()->routeIs('matriculas.*') ? 'activo' : '' }}">📝 {{ __('ui.nav_enrollments') }}</a>
+                <a href="{{ route('asignaciones.index') }}" class="{{ request()->routeIs('asignaciones.*') ? 'activo' : '' }}">👩‍🏫 {{ __('ui.nav_assignments') }}</a>
 
-                <div class="titulo-menu">Asistencia</div>
-                <a href="{{ route('asistencia.create') }}" class="{{ request()->routeIs('asistencia.*') ? 'activo' : '' }}">✅ Tomar asistencia</a>
-                <a href="{{ route('historial.index') }}" class="{{ request()->routeIs('historial.*') ? 'activo' : '' }}">📊 Historial</a>
+                <div class="titulo-menu">{{ __('ui.nav_attendance') }}</div>
+                <a href="{{ route('asistencia.create') }}" class="{{ request()->routeIs('asistencia.*') ? 'activo' : '' }}">✅ {{ __('ui.nav_take_attendance') }}</a>
+                <a href="{{ route('historial.index') }}" class="{{ request()->routeIs('historial.*') ? 'activo' : '' }}">📊 {{ __('ui.nav_history') }}</a>
             @endif
 
             {{-- DOCENTE --}}
             @if ($esDocente)
-                <div class="titulo-menu">Mi trabajo</div>
-                <a href="{{ route('cursos.index') }}" class="{{ request()->routeIs('cursos.*') ? 'activo' : '' }}">📚 Cursos</a>
-                <a href="{{ route('estudiantes.index') }}" class="{{ request()->routeIs('estudiantes.*') ? 'activo' : '' }}">🧑‍🎓 Estudiantes</a>
-                <a href="{{ route('matriculas.index') }}" class="{{ request()->routeIs('matriculas.*') ? 'activo' : '' }}">📝 Matrículas</a>
-                <a href="{{ route('notas.index') }}">📝 Notas</a>
+                <div class="titulo-menu">{{ __('ui.nav_my_work') }}</div>
+                <a href="{{ route('cursos.index') }}" class="{{ request()->routeIs('cursos.*') ? 'activo' : '' }}">📚 {{ __('ui.nav_courses') }}</a>
+                <a href="{{ route('estudiantes.index') }}" class="{{ request()->routeIs('estudiantes.*') ? 'activo' : '' }}">🧑‍🎓 {{ __('ui.nav_students') }}</a>
+                <a href="{{ route('matriculas.index') }}" class="{{ request()->routeIs('matriculas.*') ? 'activo' : '' }}">📝 {{ __('ui.nav_enrollments') }}</a>
+                <a href="{{ route('notas.index') }}">📝 {{ __('ui.nav_grades') }}</a>
 
-                <div class="titulo-menu">Asistencia</div>
-                <a href="{{ route('asistencia.create') }}" class="{{ request()->routeIs('asistencia.*') ? 'activo' : '' }}">✅ Tomar asistencia</a>
-                <a href="{{ route('historial.index') }}" class="{{ request()->routeIs('historial.*') ? 'activo' : '' }}">📊 Historial</a>
+                <div class="titulo-menu">{{ __('ui.nav_attendance') }}</div>
+                <a href="{{ route('asistencia.create') }}" class="{{ request()->routeIs('asistencia.*') ? 'activo' : '' }}">✅ {{ __('ui.nav_take_attendance') }}</a>
+                <a href="{{ route('historial.index') }}" class="{{ request()->routeIs('historial.*') ? 'activo' : '' }}">📊 {{ __('ui.nav_history') }}</a>
             @endif
 
             {{-- ESTUDIANTE --}}
             @if ($esEstudiante)
-                <div class="titulo-menu">Mi información</div>
-                <a href="{{ route('estudiante.cursos') }}" class="{{ request()->routeIs('estudiante.cursos') ? 'activo' : '' }}">📚 Mis cursos</a>
-                <a href="{{ route('estudiante.notas') }}" class="{{ request()->routeIs('estudiante.notas') ? 'activo' : '' }}"> 📒 Notas</a>
-                   <a href="{{ route('historial.index') }}" class="{{ request()->routeIs('historial.*') ? 'activo' : '' }}">📊 Historial</a>
+                <div class="titulo-menu">{{ __('ui.nav_my_info') }}</div>
+                <a href="{{ route('estudiante.cursos') }}" class="{{ request()->routeIs('estudiante.cursos') ? 'activo' : '' }}">📚 {{ __('ui.nav_my_courses') }}</a>
+                <a href="{{ route('estudiante.notas') }}" class="{{ request()->routeIs('estudiante.notas') ? 'activo' : '' }}"> 📒 {{ __('ui.nav_grades') }}</a>
+                <a href="{{ route('historial.index') }}" class="{{ request()->routeIs('historial.*') ? 'activo' : '' }}">📊 {{ __('ui.nav_history') }}</a>
             @endif
         </nav>
 
@@ -67,13 +69,13 @@
                 <div class="usuario-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="usuario-texto">
                     <strong>{{ auth()->user()->name }}</strong>
-                    <small>{{ ucfirst(auth()->user()->rol) }}</small>
+                    <small>{{ __('ui.role_' . strtolower(trim(auth()->user()->rol))) }}</small>
                 </div>
             </div>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn-salir">🚪 Cerrar sesión</button>
+                <button type="submit" class="btn-salir">🚪 {{ __('ui.logout') }}</button>
             </form>
         </div>
     </aside>
@@ -83,7 +85,7 @@
         {{-- Barra superior con el icono de perfil --}}
         <div class="topbar">
             <div class="perfil-menu" id="perfilMenu">
-                <button type="button" class="perfil-btn" onclick="togglePerfil()" aria-label="Mi perfil">
+                <button type="button" class="perfil-btn" onclick="togglePerfil()" aria-label="{{ __('ui.my_profile') }}">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </button>
 
@@ -93,18 +95,18 @@
                         <div>
                             <strong>{{ auth()->user()->name }}</strong>
                             <small>{{ auth()->user()->email }}</small>
-                            <span class="perfil-rol">{{ ucfirst(auth()->user()->rol) }}</span>
+                            <span class="perfil-rol">{{ __('ui.role_' . strtolower(trim(auth()->user()->rol))) }}</span>
                         </div>
                     </div>
 
-                    <a href="{{ route('dashboard') }}">👤 Mi perfil</a>
+                    <a href="{{ route('dashboard') }}">👤 {{ __('ui.my_profile') }}</a>
 
                     {{-- Lleva al dashboard con el formulario de eliminar abierto --}}
-                    <a href="{{ route('dashboard') }}#eliminar-cuenta" class="perfil-peligro">🗑️ Eliminar cuenta</a>
+                    <a href="{{ route('dashboard') }}#eliminar-cuenta" class="perfil-peligro">🗑️ {{ __('ui.delete_acc') }}</a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit">🚪 Cerrar sesión</button>
+                        <button type="submit">🚪 {{ __('ui.logout') }}</button>
                     </form>
                 </div>
             </div>
@@ -137,5 +139,3 @@
 </body>
 
 </html>
-
-

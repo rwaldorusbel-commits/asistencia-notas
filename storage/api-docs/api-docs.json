@@ -1,0 +1,237 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sistema de Asistencia y Notas",
+        "description": "Documentación del sistema",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/cursos": {
+            "get": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Listado de cursos (paginado de 10 en 10, ordenado por nombre)",
+                "operationId": "17250da3d7c435b0159fcc941f73800c",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vista con el listado de cursos"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Crear un curso",
+                "operationId": "dd4f92e2205a2a8ece5db972b8f2ef5f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "MAT101",
+                                        "maxLength": 20
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Matemática I",
+                                        "maxLength": 255
+                                    },
+                                    "descripcion": {
+                                        "type": "string",
+                                        "example": "Curso introductorio",
+                                        "nullable": true,
+                                        "maxLength": 1000
+                                    },
+                                    "activo": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Redirige a cursos.index con mensaje de éxito"
+                    },
+                    "422": {
+                        "description": "Error de validación (por ejemplo, código duplicado)"
+                    }
+                }
+            }
+        },
+        "/cursos/create": {
+            "get": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Formulario para crear un curso",
+                "operationId": "05f241ef13a531f51d9d05f282933cd8",
+                "responses": {
+                    "200": {
+                        "description": "Vista del formulario de creación"
+                    }
+                }
+            }
+        },
+        "/cursos/{curso}/edit": {
+            "get": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Formulario para editar un curso",
+                "operationId": "3168ef063744f7a6753019890ab36777",
+                "parameters": [
+                    {
+                        "name": "curso",
+                        "in": "path",
+                        "description": "ID del curso",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vista del formulario de edición"
+                    },
+                    "404": {
+                        "description": "Curso no encontrado"
+                    }
+                }
+            }
+        },
+        "/cursos/{curso}": {
+            "put": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Actualizar un curso",
+                "operationId": "b647bdb7ed238ad4d193d7669c76562c",
+                "parameters": [
+                    {
+                        "name": "curso",
+                        "in": "path",
+                        "description": "ID del curso",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "required": [
+                                    "codigo",
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "MAT101",
+                                        "maxLength": 20
+                                    },
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Matemática I",
+                                        "maxLength": 255
+                                    },
+                                    "descripcion": {
+                                        "type": "string",
+                                        "example": "Curso introductorio",
+                                        "nullable": true,
+                                        "maxLength": 1000
+                                    },
+                                    "activo": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Redirige a cursos.index con mensaje de éxito"
+                    },
+                    "404": {
+                        "description": "Curso no encontrado"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Cursos"
+                ],
+                "summary": "Eliminar un curso (no permite si está asignado a docentes)",
+                "operationId": "0c807fcd1c689625d7c797ecc8057d46",
+                "parameters": [
+                    {
+                        "name": "curso",
+                        "in": "path",
+                        "description": "ID del curso",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirige a cursos.index con mensaje de éxito, o regresa con error si el curso está en uso"
+                    },
+                    "404": {
+                        "description": "Curso no encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Cursos",
+            "description": "Cursos"
+        }
+    ]
+}
