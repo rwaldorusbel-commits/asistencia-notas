@@ -30,7 +30,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotaController;
 use Illuminate\Support\Facades\Session;
 
+Route::middleware('guest')->group(function () {
+    // ... tus rutas existentes en español ...
 
+    // Alias en inglés para compatibilidad con los tests de Breeze
+    Route::get('forgot-password', [PasswordResetController::class, 'formCorreo'])
+        ->name('password.request.en');
+    Route::post('forgot-password', [PasswordResetController::class, 'enviarEnlace'])
+        ->name('password.email.en');
+    Route::get('reset-password/{token}', [PasswordResetController::class, 'formReset'])
+        ->name('password.reset.en');
+    Route::post('reset-password', [PasswordResetController::class, 'actualizar'])
+        ->name('password.store.en');
+});
 
 
 Route::get('/tv', function () {

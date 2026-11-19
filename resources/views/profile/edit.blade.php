@@ -1,4 +1,4 @@
-<x-layouts.app> {{-- ⚠️ IMPORTANTE: Cambia esto por el nombre de tu layout con el menú morado --}}
+<x-app-layout> {{-- ⚠️ IMPORTANTE: Cambia esto por el nombre de tu layout con el menú morado --}}
 
     <div class="p-6">
         {{-- Título de la página (igual que en Asignaciones) --}}
@@ -22,4 +22,4 @@
         </div>
     </div>
 
-</x-layouts.app>
+</x-app-layout>
